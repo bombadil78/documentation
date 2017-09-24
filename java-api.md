@@ -42,6 +42,9 @@
 - Runtime
 - SecurityManager
 - System
+  * Configuration is done through command line arguments, properties or environment variables
+  * Properties: Extends HashMap; offers load(someSource), get(someKey) and a copy constructor Properties(someDefault)
+  * 
 
 ## java.util
 
@@ -109,7 +112,7 @@ Traversial with foreach-Loop, iterator() or forEach(), add(), remove(), size(), 
 * The collection views allow removal operations on the backing map, but no add operations => use put(), putAll()
 * Standard implementation: HashMap (offers all optional operations and null keys / null values)
 
-## Comparision
+### Comparision
 *Comparable* interface for the natural ordering of a (value) object, e.g. Foo implements Comparable<Foo>
 
 *Comparator* is (ad-hoc) class that implements *Comparable*
@@ -126,3 +129,35 @@ Sorting in reverse or custom order: Comparator's reversed(), Comparator.comparin
   * Range-views: subMap(T fromKeyInclusive, T toKeyExlusive), headMap(T toKeyExclusive), tailMap(T fromKeyExclusive)
   * Endpoints: firstKey(), lastKey()
   * Comparator access: comparator()
+  
+## java.time
+
+There are three types of time bound abstraction
+- Absolute: Absolute UTC time 
+  * Instant: Point on the absolute UTC time line
+- Local: Date and/or time not bound to a time-zone
+  * LocalDate
+  * LocalTime
+  * LocalDateTime
+- Zoned: Date and/or time bound to a time-zone
+  * ZonedDateTime
+    + withZoneSameInstant(): Same instant in another time-zone
+    + withZoneSameLocal(): Same local datetime in another time-zone (different instant)
+  * ZoneId: Time-zones
+- Intervals
+  * Duration
+    + Interval expressed in nanos / seconds WITHOUT date-semantics
+  * Period
+    + Intervals expressed in days / hours WITH date-semantics like leap hour adjustment
+- Adjustments
+  * Temporal
+    + Interface for date/time scales, consists of a set of TemporalUnits
+    + Date/time scale has a plus(int amount, TemporalUnit unit) and minus(...), with(...) semantics
+    + Examples: LocalTime, LocalDate, LocalDateTime, ZonedDateTime, ...    
+  * TemporalAdjuster
+    + @FunctionalInterface that offers Temporal adjustInto(someTemporal)
+    + Strategy to return a transformed Temporal; implemented as lambda
+    + someTemporal.with(someTemporalAdjuster) returns an adjusted Temporal
+    + Use TemporalAdjusters for common adjustments    
+    
+  
