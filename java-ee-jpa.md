@@ -7,6 +7,7 @@ JPA includes a specification on how to map Java classes to database tables (ORM)
 JPA is a specification an there exist several implementations of it, e.g. Hibernate or EclipseLink.
 
 ## Basics
+<todo: jpa.png here>
 
 ### EntityManager
 This is the main abstraction an application uses to manage the persistence life-cycle of other classes. The to-be-persisted classes are called *entities*, the *EntityManager* manages those. 
@@ -26,20 +27,26 @@ em.close();
 
 ```
 // 2) Container-managed and transaction-scoped
-@PersistenceContext(unitName = "my-persistence-unit")
+@PersistenceContext(
+    unitName = "my-persistence-unit", 
+    type = PersistenceContextType.TRANSACTION
+    synchronization = SynchronizationType.SYNCHRONIZED
+)
 private EntityManager em;
 
 // The container manages the life-cycle of the EntityManager
 // No need to close it manually
 ```
 
-The second approach is only applicable when deployed on application servers. From the API: 
+The second approach is only applicable when deployed on application servers. From the API of *@PersistenceContext*: 
 
 > Expresses a dependency on a container-managed EntityManager and its associated persistence context
  
 In detail:
 - The EntityManager will be created using a factory configured by "my-persistence-unit"
-- The EntityManager is container-managed => TODO
+- The EntityManager is container-managed
+- *type* specifies if the context is transaction-scoped or extended
+- *synchronization* specifies if the context is automatically synchronized with the JPA transaction (default) or if the context must be joined to the current transaction using *EntityManager.joinTransaction()* 
 
 ### PersistenceUnit
 A *PersistenceUnit* is a logical grouping of persistable classes. It has the following properties:
@@ -48,11 +55,14 @@ A *PersistenceUnit* is a logical grouping of persistable classes. It has the fol
 * Provider: The class used for the JPA implementation
 * Properties: Connection properties like username, password or database driver
 
+Todo: plus classes / jars
+
 The file *persistence.xml* is used to configure one or more EntityManagerFactories which in turn can create EntityManagers.
 
 ### PersistenceContext
-The *PersistenceContext* is
+The *PersistenceContext* is a set of managed entites. An EntityManager always manages exactly one PersistenceContext, but several EntityManagers can share the entites they manage, e.g. when using 
 
+A PersistenceContext is always bound to a concret PersistenceUnit.
 
 ## Transactions
 Managed Entities
@@ -73,4 +83,3 @@ TODO:
 # References
 - Overview: http://www.kumaranuj.com/2013/06/jpa-2-entitymanagers-transactions-and.html
 - In Depth: Pro JPA 2 Book
-
