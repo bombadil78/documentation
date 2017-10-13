@@ -20,7 +20,7 @@ The life-cycle of the entity manager can be managed by the application or by the
 EntityManager em = Persistence
 	      .createEntityManagerFactory("my-persistence-unit")
 	      .createEntityManager();
-// do some stuff
+// do stuff
 em.close();
 ```
 
